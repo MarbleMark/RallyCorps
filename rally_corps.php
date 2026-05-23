@@ -9,7 +9,7 @@ function CurlToRC($url, $data) {
 	$headers =
 	[
 	"Content-Type: application/json",
-	"Authorization: Bearer " . RALLY_CORPS_SECRET_KEY,
+	"Authorization: Bearer <shared-secret>",
 	];
 	curl_setopt($curl, CURLOPT_HTTPHEADER, $headers);
 
