@@ -2,14 +2,19 @@
 
 function CurlToRC($url, $data) {
 	//	Execute a CURL commend
+	$data['source_system'] = "rmp";
+	$data['partner_rows'] = $rows;
+		
+//	echo "<pre>" . json_encode($data, JSON_PRETTY_PRINT) . "</pre>"; exit;
+
 	$jsonData = json_encode($data);
 
 	$curl = curl_init();
 
 	$headers =
 	[
-	"Content-Type: application/json",
-	"Authorization: Bearer <shared-secret>",
+		"Content-Type: application/json",
+		"Authorization: Bearer <shared-secret>"
 	];
 	curl_setopt($curl, CURLOPT_HTTPHEADER, $headers);
 
@@ -31,28 +36,6 @@ function CurlToRC($url, $data) {
 	curl_close($curl);
 	
 	return $response;
-}
-
-function EventToRC ( $db, $group_ID, $event ) {
-	//	Send an event to RallyCorps
-	$data = [];
-	$rows = [];
-	$data['source_system'] = "rmp";
-	
-	$eventData['events.group_ID'] = $group_ID;
-	$eventData['events.event_ID'] = $event->event_ID;
-	$eventData['events.event_name'] = mysqli_real_escape_string($db->dbLink, $event->event_name);
-	$eventData['start_date'] = SQLDateFromStandard($event->start_date);
-	$eventData['end_date'] = SQLDateFromStandard($event->end_date);
-
-	$data['partner_rows'] = $eventData;
-
-//	print_r($data);
-//	printf('<br>');
-
-	$url = 'https://rallycorps.onrender.com/v1/webhooks/import/events';
-
-	return CurlToRC($url, $data);
 }
 
 ?>
