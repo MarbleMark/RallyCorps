@@ -1,23 +1,23 @@
 <?php
-require_once __DIR__ . '/rally_corps.php';
+//require_once __DIR__ . '/rally_corps.php';
 
 /**
  * One rally day row from RMP → keys inside events.rallies (stored in RC schedule_json).
  * Prefix with events. on each day field — do not nest a separate top-level "events.rallies" partner key
  * for adapter mapping; the parent row carries events.rallies as a JSON array.
  */
-function RallyObjectToArray($rally): array {
-	$rallyData = [];
-	$rallyData['rally_ID'] = $rally->rally_ID;
-	// rally_name: legacy; safe to omit later
-	$rallyData['rally_name'] = $rally->rally_name;
-	$rallyData['date'] = $rally->date;
-	$rallyData['sub_rally_name'] = $rally->sub_rally_name;
-	$rallyData['day'] = $rally->day;
-	$rallyData['event_order'] = $rally->event_order;
-	$rallyData['vol_default_on'] = $rally->vol_default_on;
-	return $rallyData;
-}
+//function RallyObjectToArray($rally): array {
+//	$rallyData = [];
+//	$rallyData['rally_ID'] = $rally->rally_ID;
+//	// rally_name: legacy; safe to omit later
+//	$rallyData['rally_name'] = $rally->rally_name;
+//	$rallyData['date'] = $rally->date;
+//	$rallyData['sub_rally_name'] = $rally->sub_rally_name;
+//	$rallyData['day'] = $rally->day;
+//	$rallyData['event_order'] = $rally->event_order;
+//	$rallyData['vol_default_on'] = $rally->vol_default_on;
+//	return $rallyData;
+//}
 
 /**
  * POST one RMP event (+ rally days) to RallyCorps.
@@ -31,8 +31,33 @@ function EventToRC($rdb, $group_ID, $event): string {
 		WHERE event='" . mysqli_real_escape_string($rdb->dbLink, $event->event_ID) . "'
 		ORDER BY date";
 	$result = $rdb->query($sql);
-	while ($rally = mysqli_fetch_object($result)) {
-		$rallies[] = RallyObjectToArray($rally);
+	if ( mysqli_num_rows ( $result ) ) {
+//		while ($rally = mysqli_fetch_object($result)) {
+//			$rallies[] = RallyObjectToArray($rally);
+//		}
+		while ( $rally = mysqli_fetch_assoc ( $result ) ) {
+			$rally['teams'] = [];
+			$sql = "SELECT team_ID, rally_ID, team_name, team_description, needs, sort_order, stage_team 
+				FROM teams 
+				WHERE rally_ID='" . $rally['rally_ID'] . "'";
+			$tResult = $rdb->query ( $sql );
+			if ( mysqli_num_rows ( $result ) ) {
+				while ( $team = mysqli_fetch_assoc ( $tResult ) ) {
+					$team['positions'] = [];
+					$sql = "SELECT pos_ID, team AS team_ID, description, priority, sort_order
+						FROM positions 
+						WHERE team='" . $team['team_ID'] . "'";
+					$pResult = $rdb->query ( $sql );
+					if ( mysqli_num_rows ( $pResult ) ) {
+						while ( $position = mysqli_fetch_assoc ( $pResult ) ) {
+							$team['positions'][] = $position;
+						}
+					}
+					$rally['teams'][] = $team;
+				}
+			}
+			$rallies[] = $rally;
+		}
 	}
 
 	// Single partner_rows[0] object — table.column keys (not a flat envelope without partner_rows).
@@ -45,7 +70,7 @@ function EventToRC($rdb, $group_ID, $event): string {
 		'events.registration_open' => $event->registration_open ?? 0,
 		'events.rallies' => $rallies,
 	];
-
+	
 	$url = 'https://rallycorps.onrender.com/v1/webhooks/import/events';
 	return CurlToRC($url, $partnerRow);
 }
