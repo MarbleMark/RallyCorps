@@ -1,6 +1,6 @@
 When I send a single personnel record to users I get this error:
 
-Internal Server Error
+{"detail":"mapped email missing; map partner email to details_json.contact_email or user.email"}
 
 Code is in rally_corps_volunteers.php.  Note that group_ID is not sent because it is irrelevant for personnel.
 
@@ -14,7 +14,7 @@ This is the payload:
             "users.first_name": "Mark",
             "users.last_name": "Larson",
             "users.middle_initial": "S",
-            "users.e_mail": "mark@marblesoft.com",
+            "users.email": "mark@marblesoft.com",
             "users.address": "11145 Hastings St NE",
             "users.city": "Blaine",
             "users.state": "MN",
@@ -163,7 +163,3 @@ This is the payload:
         }
     ]
 }
-
-Mark Larson
-Marblesoft
-mark@marblesoft.com
