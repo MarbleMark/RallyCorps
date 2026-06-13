@@ -4,14 +4,14 @@
  * Set RALLYCORPS_WEBHOOK_IMPORT_SECRET in the environment (same value as RC WEBHOOK_IMPORT_SECRET).
  */
 
-function CurlToRC(string $url, array $partnerRow): string {
+function CurlToRC(string $url, array $partnerRows): string {
 	$data = [
 		'source_system' => 'rmp',
-		'partner_rows' => [ $partnerRow ],
+		'partner_rows' => $partnerRows,
 	];
 
 	// Uncomment while debugging:
-	// echo '<pre>' . json_encode($data, JSON_PRETTY_PRINT) . '</pre>'; exit;
+//	 echo '<pre>' . json_encode($data, JSON_PRETTY_PRINT) . '</pre>'; exit;
 
 	$jsonData = json_encode($data);
 	if ($jsonData === false) {
