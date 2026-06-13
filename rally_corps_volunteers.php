@@ -97,7 +97,7 @@ function VolunteerToArray ( $db, $volunteer ): array {
 		'users.first_name' => $volunteer->first_name,
 		'users.last_name' => $volunteer->last_name,
 		'users.middle_initial' => $volunteer->m_i,
-		'users.e_mail' => $volunteer->e_mail,
+		'users.email' => $volunteer->e_mail,
 		'users.address' => $volunteer->address,
 		'users.city' => $volunteer->city,
 		'users.state' => $volunteer->state,
