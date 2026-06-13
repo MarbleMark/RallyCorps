@@ -14,9 +14,6 @@ function EventToRC($rdb, $group_ID, $event): string {
 		ORDER BY date";
 	$result = $rdb->query($sql);
 	if ( mysqli_num_rows ( $result ) ) {
-//		while ($rally = mysqli_fetch_object($result)) {
-//			$rallies[] = RallyObjectToArray($rally);
-//		}
 		while ( $rally = mysqli_fetch_assoc ( $result ) ) {
 			$rally['group_ID'] = $group_ID;
 			$rally['teams'] = [];
@@ -46,7 +43,7 @@ function EventToRC($rdb, $group_ID, $event): string {
 	}
 
 	// Single partner_rows[0] object — table.column keys (not a flat envelope without partner_rows).
-	$partnerRow = [
+	$partnerRows[] = [
 		'events.group_ID' => (string) $group_ID,
 		'events.event_ID' => (string) $event->event_ID,
 		'events.event_name' => $event->event_name,
@@ -57,7 +54,7 @@ function EventToRC($rdb, $group_ID, $event): string {
 	];
 	
 	$url = 'https://rallycorps.onrender.com/v1/webhooks/import/events';
-	return CurlToRC($url, $partnerRow);
+	return CurlToRC($url, $partnerRows);
 }
 
 ?>
