@@ -1,5 +1,8 @@
 <?php
 
+ini_set('display_errors', 1);
+error_reporting(E_ALL);
+
 require '../app_top.php'; //	Sets the secret key outside the web root
 
 function sendJsonWithSecret($url, $data, $secretKey) {
