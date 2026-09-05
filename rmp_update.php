@@ -1,7 +1,7 @@
 <?php
 
-//ini_set('display_errors', 1);
-//error_reporting(E_ALL);
+ini_set('display_errors', 1);
+error_reporting(E_ALL);
 
 include '../app_top.php';
 
@@ -32,7 +32,9 @@ $providedSecret = getSecretHeader();
 // --- Step 2: Verify the secret using a timing-safe comparison ---
 if ($providedSecret === null || !hash_equals($expectedSecret, $providedSecret)) {
     http_response_code(401);
-    echo json_encode(['error' => 'Unauthorized']);
+    $result = json_encode(['error' => 'Unauthorized']);
+	error_log ( $result );
+	echo $result;
     exit;
 }
 
@@ -41,7 +43,9 @@ $rawBody = file_get_contents('php://input');
 
 if ($rawBody === false || $rawBody === '') {
     http_response_code(400);
-    echo json_encode(['error' => 'Empty request body']);
+    $result = json_encode(['error' => 'Empty request body']);
+	error_log ( $result );
+	echo $result;
     exit;
 }
 
@@ -49,19 +53,25 @@ $data = json_decode($rawBody, true);
 
 if (json_last_error() !== JSON_ERROR_NONE) {
     http_response_code(400);
-    echo json_encode(['error' => 'Invalid JSON: ' . json_last_error_msg()]);
+    $result = json_encode(['error' => 'Invalid JSON: ' . json_last_error_msg()]);
+	error_log ( $result );
+	echo $result;
     exit;
 }
 
 // --- Step 4: (Optional) Validate expected fields ---
 if (!isset($data['source_system']) || !isset($data['event_type'])) {
     http_response_code(422);
-    echo json_encode(['error' => 'Missing required fields']);
+    $result = json_encode(['error' => 'Missing required fields']);
+	error_log ( $result );
+	echo $result;
     exit;
 }
 
 // --- Step 5: Do something with the data ---
 // e.g. save to database, process, etc.
+
+error_log ( PHP_EOL . date( DATE_RFC850 ) . ' ' . json_encode($data), 3, 'update_log' );
 
 http_response_code(200);
 echo json_encode([
