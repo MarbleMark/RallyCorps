@@ -53,12 +53,12 @@ function sendJsonWithSecret($url, $data, $secretKey) {
 /*
 {
 	  "source_system": "rmp",
-	  "source_eid": "5",
+	  "source_group_ID": "1",
 	  "event_type": "volunteer_event_registration",
 	  "partner_rows": [
 		{
 		  "events.event_ID": "5",
-		  "rc_people.PID": "12345"
+		  "personnel.pers_ID": "12345"
 		}
 	  ],
 	  "rc_event_id": 42,
@@ -69,14 +69,15 @@ function sendJsonWithSecret($url, $data, $secretKey) {
 $rcExport = new stdClass(); 
 
 $rcExport->source_system = 'rmp';
-$rcExport->source_eid = 5;
+$rcExport->source_eid = 5;	//	Is this obsolete?
 $rcExport->event_type = 'volunteer_event_registration';
 $rcExport->partnerRows = [
-	  "events.event_ID" => 5,
-	  "rc_people.PID" => 12346
+	"source_group_ID" => 1,	//	1 for Ojibwe Forests Rally
+	"events.event_ID" => 5,
+	"personnel.pers_ID" => 32
   ];
 $rcExport->rc_event_id = 42;
-$rcExport->rc_volunteer_id = 18;
+$rcExport->rc_volunteer_id = 22;
 
 //	Target address
 $url = 'https://rallymasterpro.org/includes/rally_corps/rmp_update.php';
