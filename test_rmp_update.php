@@ -73,10 +73,10 @@ $rcExport->source_eid = 5;
 $rcExport->event_type = 'volunteer_event_registration';
 $rcExport->partnerRows = [
 	  "events.event_ID" => 5,
-	  "rc_people.PID" => 12345
+	  "rc_people.PID" => 12346
   ];
 $rcExport->rc_event_id = 42;
-$rcExport->rc_volunteer_id = 17;
+$rcExport->rc_volunteer_id = 18;
 
 //	Target address
 $url = 'https://rallymasterpro.org/includes/rally_corps/rmp_update.php';
@@ -85,7 +85,7 @@ $secretKey = getenv('RALLYCORPS_WEBHOOK_IMPORT_SECRET');
 
 try {
     $result = sendJsonWithSecret($url, $rcExport, $secretKey);
-    print_r($result);
+    print_r( $result );
 } catch (Exception $e) {
     echo "Error: " . $e->getMessage();
 }
