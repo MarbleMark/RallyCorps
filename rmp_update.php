@@ -3,7 +3,7 @@
 //ini_set('display_errors', 1);
 //error_reporting(E_ALL);
 
-include '../app_top.php';
+require_once '../app_top.php';
 
 // --- Configuration ---
 $expectedSecret = getenv('RALLYCORPS_WEBHOOK_IMPORT_SECRET'); // set this in your server environment
@@ -49,7 +49,7 @@ if ($rawBody === false || $rawBody === '') {
     exit;
 }
 
-$data = json_decode($rawBody, true);
+$data = json_decode($rawBody);
 
 if (json_last_error() !== JSON_ERROR_NONE) {
     http_response_code(400);
@@ -60,7 +60,7 @@ if (json_last_error() !== JSON_ERROR_NONE) {
 }
 
 // --- Step 4: (Optional) Validate expected fields ---
-if (!isset($data['source_system']) || !isset($data['event_type'])) {
+if (!isset($data->source_system) || !isset($data->event_type)) {
     http_response_code(422);
     $result = json_encode(['error' => 'Missing required fields']);
 	error_log ( $result );
@@ -73,10 +73,24 @@ if (!isset($data['source_system']) || !isset($data['event_type'])) {
 
 error_log ( PHP_EOL . date( DATE_RFC850 ) . ' ' . json_encode($data), 3, 'update_log' );
 
+//	The included scripts populate the $response array
+
+switch ( $data->event_type ) {
+	case 'volunteer_event_registration':
+		include 'volunteer_registration.php';
+		break;
+	default:
+		$response['message'] = 'Unknown event type';
+		break;
+}
+
+error_log ( PHP_EOL . json_encode($response), 3, 'update_log' );
+
 http_response_code(200);
 echo json_encode([
     'status' => 'success',
-    'received' => $data
+    'received' => $data,
+	'response' => $response
 ]);
 
 ?>
