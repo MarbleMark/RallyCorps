@@ -71,7 +71,7 @@ switch ( $event_type ) {
 		$rcExport->rc_event_id = 42;
 		$rcExport->rc_volunteer_id = 26;
 		$rcExport->partnerRows = [
-			"source_group_ID" => 1,	//	1 for Ojibwe Forests Rally
+			"events.group_ID" => 1,	//	1 for Ojibwe Forests Rally
 			"events.event_ID" => 5,	//	5 for 2024 Ojibwe
 			"events.rallies" => [
 				[
