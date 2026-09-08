@@ -48,36 +48,62 @@ function sendJsonWithSecret($url, $data, $secretKey) {
 
 // Test code
 
-//	Create an object to match Mirza's example
-
-/*
-{
-	  "source_system": "rmp",
-	  "source_group_ID": "1",
-	  "event_type": "volunteer_event_registration",
-	  "partner_rows": [
-		{
-		  "events.event_ID": "5",
-		  "personnel.pers_ID": "12345"
-		}
-	  ],
-	  "rc_event_id": 42,
-	  "rc_volunteer_id": 17
-}
-*/
+$event_type = $_GET['type']?? '';
 
 $rcExport = new stdClass(); 
 
 $rcExport->source_system = 'rmp';
-$rcExport->source_eid = 5;	//	Is this obsolete?
-$rcExport->event_type = 'volunteer_event_registration';
-$rcExport->partnerRows = [
-	"source_group_ID" => 1,	//	1 for Ojibwe Forests Rally
-	"events.event_ID" => 5,
-	"personnel.pers_ID" => 32
-  ];
-$rcExport->rc_event_id = 42;
-$rcExport->rc_volunteer_id = 22;
+
+switch ( $event_type ) {
+	case 'ver':
+		$rcExport->source_eid = 5;	//	Same as events.event_ID in array
+		$rcExport->event_type = 'volunteer_event_registration';
+		$rcExport->rc_event_id = 42;
+		$rcExport->rc_volunteer_id = 26;
+		$rcExport->partnerRows = [
+			[
+				"source_group_ID" => 1,	//	1 for Ojibwe Forests Rally
+				"events.event_ID" => 5,	//	5 for 2024 Ojibwe
+				"events.rallies" => [
+					[
+						"rally_ID" => 123	//	123 for 2024 Friday
+					],
+					[
+						"rally_ID" => 124	//	124 for 2024 Saturday
+					]
+				],
+				"personnel.pers_ID" => 49,
+				"personnel.first_name" => 'Something',
+				"personnel.last_name" => 'Whatever'
+			]
+		];
+		break;
+	case 'eu':
+		$rcExport->source_eid = 5;	//	Same as events.event_ID in array
+		$rcExport->event_type = 'event_update';
+		$rcExport->rc_event_id = 42;
+		$rcExport->partnerRows = [
+			[
+				"source_group_ID" => 1,	//	1 for Ojibwe Forests Rally
+				"events.event_ID" => 5	//	5 for 2024 Ojibwe
+			]
+		];
+		break;
+	default:
+		$rcExport->source_eid = 5;	//	Same as events.event_ID in array
+		$rcExport->event_type = 'volunteer_event_registration';
+		$rcExport->rc_event_id = 42;
+		$rcExport->rc_volunteer_id = 22;
+		$rcExport->partnerRows = [
+			"source_group_ID" => 1,	//	1 for Ojibwe Forests Rally
+			"events.event_ID" => 5,
+			"personnel.pers_ID" => 505,
+			"personnel.first_name" => 'Something',
+			"personnel.last_name" => 'Whatever'
+		];
+		break;
+}
+
 
 //	Target address
 $url = 'https://rallymasterpro.org/includes/rally_corps/rmp_update.php';
