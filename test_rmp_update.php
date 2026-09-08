@@ -48,14 +48,24 @@ function sendJsonWithSecret($url, $data, $secretKey) {
 
 // Test code
 
+/*	event_type tells us which type of event to test
+	event_type refers to an update event type being sent from Rally Corps, not a rally event
+
+1 - 'ver'	- A volunteer event registration
+2 - 'eu'	- A rally event update
+3 -	Unused (for Rally Data 2)
+4 - Unused (for Rally Data 2)
+
+*/
+
 $event_type = $_GET['type']?? '';
 
 $rcExport = new stdClass(); 
 
-$rcExport->source_system = 'rmp';
+$rcExport->source_system = 'rmp';	//	Event going to Rallymaster Pro
 
 switch ( $event_type ) {
-	case 'ver':
+	case 'ver':	//	A volunteer event registration
 		$rcExport->source_eid = 5;	//	Same as events.event_ID in array
 		$rcExport->event_type = 'volunteer_event_registration';
 		$rcExport->rc_event_id = 42;
@@ -76,7 +86,7 @@ switch ( $event_type ) {
 			"personnel.last_name" => 'Whatever'
 		];
 		break;
-	case 'eu':
+	case 'eu':	//	An event update
 		$rcExport->source_eid = 5;	//	Same as events.event_ID in array
 		$rcExport->event_type = 'event_update';
 		$rcExport->rc_event_id = 42;
@@ -100,7 +110,6 @@ switch ( $event_type ) {
 		];
 		break;
 }
-
 
 //	Target address
 $url = 'https://rallymasterpro.org/includes/rally_corps/rmp_update.php';
