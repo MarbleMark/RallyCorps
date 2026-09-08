@@ -79,6 +79,9 @@ switch ( $data->event_type ) {
 	case 'volunteer_event_registration':
 		include 'volunteer_registration.php';
 		break;
+	case 'event_update':
+		include 'event_update.php';
+		break;
 	default:
 		$response['message'] = 'Unknown event type';
 		break;
