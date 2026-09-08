@@ -61,21 +61,19 @@ switch ( $event_type ) {
 		$rcExport->rc_event_id = 42;
 		$rcExport->rc_volunteer_id = 26;
 		$rcExport->partnerRows = [
-			[
-				"source_group_ID" => 1,	//	1 for Ojibwe Forests Rally
-				"events.event_ID" => 5,	//	5 for 2024 Ojibwe
-				"events.rallies" => [
-					[
-						"rally_ID" => 123	//	123 for 2024 Friday
-					],
-					[
-						"rally_ID" => 124	//	124 for 2024 Saturday
-					]
+			"source_group_ID" => 1,	//	1 for Ojibwe Forests Rally
+			"events.event_ID" => 5,	//	5 for 2024 Ojibwe
+			"events.rallies" => [
+				[
+					"rally_ID" => 123	//	123 for 2024 Friday
 				],
-				"personnel.pers_ID" => 49,
-				"personnel.first_name" => 'Something',
-				"personnel.last_name" => 'Whatever'
-			]
+				[
+					"rally_ID" => 124	//	124 for 2024 Saturday
+				]
+			],
+			"personnel.pers_ID" => 49,
+			"personnel.first_name" => 'Something',
+			"personnel.last_name" => 'Whatever'
 		];
 		break;
 	case 'eu':
@@ -83,13 +81,12 @@ switch ( $event_type ) {
 		$rcExport->event_type = 'event_update';
 		$rcExport->rc_event_id = 42;
 		$rcExport->partnerRows = [
-			[
-				"source_group_ID" => 1,	//	1 for Ojibwe Forests Rally
-				"events.event_ID" => 5	//	5 for 2024 Ojibwe
-			]
+			"source_group_ID" => 1,	//	1 for Ojibwe Forests Rally
+			"events.event_ID" => 5	//	5 for 2024 Ojibwe
 		];
 		break;
 	default:
+		//	This is deprecated and should not be used (no type sent)
 		$rcExport->source_eid = 5;	//	Same as events.event_ID in array
 		$rcExport->event_type = 'volunteer_event_registration';
 		$rcExport->rc_event_id = 42;
